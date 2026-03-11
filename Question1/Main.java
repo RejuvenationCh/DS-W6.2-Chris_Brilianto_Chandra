@@ -25,61 +25,53 @@ public class Main {
             return Integer.compare(this.arrivalOrder, other.arrivalOrder);
         }
     }
-
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter How Many Letters : ");
-        if (!sc.hasNextInt())
-            return;
-        int userInput = sc.nextInt();
+        try (Scanner sc = new Scanner(System.in)) {
+            System.out.println("Enter How Many Letters : ");
+            if (!sc.hasNextInt())
+                return;
+            int userInput = sc.nextInt();
+            System.out.println("Enter name, duration, and priority of the letters : ");
 
-        System.out.println("Enter name, duration, and priorty of the letters : ");
+            Queue<Letter> pendingQueue = new PriorityQueue<>();
+            Queue<Letter> processingQueue = new PriorityQueue<>();
+            Queue<Letter> sentSQueue = new PriorityQueue<>();
 
-        Queue<Letter> pendingQueue = new PriorityQueue<>();
-        Queue<Letter> processingQueue = new PriorityQueue<>();
-        Queue<Letter> sentSQueue = new PriorityQueue<>();
-
-        for (int i = 0; i < userInput; i++) {
-            pendingQueue.add(new Letter(sc.next(), sc.nextInt(), sc.nextInt(), i));
-        }
-
-        int currentTime = 0;
-        
-        while (!pendingQueue.isEmpty()) {
-            Letter l = pendingQueue.poll();
-            l.status = "Queued";
-            processingQueue.add(l);
-        }
-
-        printStatus(currentTime, pendingQueue, processingQueue, sentSQueue);
-
-        while (!processingQueue.isEmpty()) {
-            currentTime++;
-            List<Letter> tempStorage = new ArrayList<>();
-            boolean changed = false;
-
-            while (!processingQueue.isEmpty()) {
-                tempStorage.add(processingQueue.poll());
+            for (int i = 0; i < userInput; i++) {
+                pendingQueue.add(new Letter(sc.next(), sc.nextInt(), sc.nextInt(), i));
             }
+            int currentTime = 0;
+            while (!pendingQueue.isEmpty()) {
+                Letter l = pendingQueue.poll();
+                l.status = "Queued";
+                processingQueue.add(l);
+            }
+            printStatus(currentTime, pendingQueue, processingQueue, sentSQueue);
+            while (!processingQueue.isEmpty()) {
+                currentTime++;
+                List<Letter> tempStorage = new ArrayList<>();
+                boolean changed = false;
 
-            for (Letter l : tempStorage) {
-                l.remainingTime = l.remainingTime - 1;
-                if (l.remainingTime <= 0) {
-                    l.status = "Sent";
-                    sentSQueue.add(l);
-                    changed = true;
-                } else {
-                    processingQueue.add(l);
+                while (!processingQueue.isEmpty()) {
+                    tempStorage.add(processingQueue.poll());
+                }
+
+                for (Letter l : tempStorage) {
+                    l.remainingTime = l.remainingTime - 1;
+                    if (l.remainingTime <= 0) {
+                        l.status = "Sent";
+                        sentSQueue.add(l);
+                        changed = true;
+                    } else {
+                        processingQueue.add(l);
+                    }
+                }
+
+                if (changed || processingQueue.isEmpty()) {
+                    printStatus(currentTime, pendingQueue, processingQueue, sentSQueue);
                 }
             }
-
-            if (changed || processingQueue.isEmpty()) {
-                printStatus(currentTime, pendingQueue, processingQueue, sentSQueue);
-            }
-        }
-        sc.close();
-        sc.close();
-        sc.close();
+        } // Scanner closes here automatically
     }
 
     private static void printStatus(int time, Queue<Letter> p, Queue<Letter> pr, Queue<Letter> s) {

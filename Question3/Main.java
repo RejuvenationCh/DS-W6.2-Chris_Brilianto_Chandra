@@ -31,10 +31,9 @@ public class Main {
             queue.add(new Student(names[i], chances));
         }
 
-        // Processing the queue
         while (!queue.isEmpty()) {
-            Student current = queue.poll(); // Get student at the front
-            current.chances--; // Use one opportunity
+            Student current = queue.poll();
+            current.chances--; 
             
             String status;
             boolean backInQueue = false;
@@ -46,14 +45,12 @@ public class Main {
                 status = "Get Out";
             }
 
-            // Output: name|status|remaining chances
             System.out.println(current.name + "|" + status + "|" + current.chances);
 
             if (backInQueue) {
-                queue.add(current); // Move to the back of the line
+                queue.add(current);
             }
         }
-        
         sc.close();
     }
 }

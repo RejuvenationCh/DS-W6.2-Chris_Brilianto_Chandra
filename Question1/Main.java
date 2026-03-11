@@ -31,7 +31,6 @@ public class Main {
         System.out.println("Enter How Many Letters : ");
         if (!sc.hasNextInt())
             return;
- 
         int userInput = sc.nextInt();
 
         System.out.println("Enter name, duration, and priorty of the letters : ");
@@ -78,6 +77,7 @@ public class Main {
                 printStatus(currentTime, pendingQueue, processingQueue, sentSQueue);
             }
         }
+        sc.close();
         sc.close();
         sc.close();
     }
